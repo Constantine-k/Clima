@@ -11,17 +11,17 @@ import CoreLocation
 import Alamofire
 import SwiftyJSON
 
-class WeatherViewController: UIViewController, CLLocationManagerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangingCityDelegate {
     
     //Constants
-    let WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather"
-    let APP_ID = "e72ca729af228beabd5d20e3b7749713"
+    let weatherURL = "http://api.openweathermap.org/data/2.5/weather"
+    let appID = "e72ca729af228beabd5d20e3b7749713"
     
     
     let locationManager = CLLocationManager()
     var weatherModel: WeatherDataModel?
     
-    //Pre-linked IBOutlets
+
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
@@ -85,17 +85,13 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     //MARK: - UI Updates
     /***************************************************************/
     
-    
-    //Write the updateUIWithWeatherData method here:
     func updateUIWithWeatherData() {
         if let weatherModel = weatherModel {
             cityLabel.text = weatherModel.city
-            temperatureLabel.text = String(weatherModel.temperature)
+            temperatureLabel.text = String(weatherModel.temperature) + "°"
             weatherIcon.image = UIImage(named: weatherModel.weatherIconName)
         }
     }
-    
-    
     
     
     
@@ -114,9 +110,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
             
             print("latitude: \(latitude), longitude: \(longitude)")
             
-            let params = ["lat": latitude, "lon": longitude, "appid": APP_ID]
+            let params = ["lat": latitude, "lon": longitude, "appid": appID]
             
-            fetchWeatherData(url: WEATHER_URL, parameters: params)
+            fetchWeatherData(url: weatherURL, parameters: params)
         }
     }
     
@@ -134,11 +130,19 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate {
     
     
     //Write the userEnteredANewCityName Delegate method here:
-    
+    func userEnteredANewCity(name: String) {
+        let parameters = ["q": name, "appid": appID]
+        fetchWeatherData(url: weatherURL, parameters: parameters)
+    }
 
     
-    //Write the PrepareForSegue Method here
-    
+    // Prepare For Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "changeCityName" {
+            let destinationVC = segue.destination as? ChangeCityViewController
+            destinationVC?.delegate = self
+        }
+    }
     
     
     
