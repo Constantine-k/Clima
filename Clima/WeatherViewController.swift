@@ -12,20 +12,18 @@ import Alamofire
 import SwiftyJSON
 
 class WeatherViewController: UIViewController, CLLocationManagerDelegate, ChangingCityDelegate {
-    
+
     //Constants
     let weatherURL = "http://api.openweathermap.org/data/2.5/weather"
     let appID = "e72ca729af228beabd5d20e3b7749713"
     
-    
     let locationManager = CLLocationManager()
     var weatherModel: WeatherDataModel?
-    
 
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,8 +33,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
-    
-    
     
     //MARK: - Networking
     /***************************************************************/
@@ -56,11 +52,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
             }
         }
     }
-
-    
-    
-    
-    
     
     //MARK: - JSON Parsing
     /***************************************************************/
@@ -78,9 +69,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
         
         updateUIWithWeatherData()
     }
-
-    
-    
     
     //MARK: - UI Updates
     /***************************************************************/
@@ -93,11 +81,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
         }
     }
     
-    
-    
     //MARK: - Location Manager Delegate Methods
     /***************************************************************/
-    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations[locations.count - 1]
@@ -116,25 +101,19 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
         }
     }
     
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
         cityLabel.text = "Location Unavailable"
     }
     
-    
-
-    
     //MARK: - Change City Delegate methods
     /***************************************************************/
-    
     
     //Write the userEnteredANewCityName Delegate method here:
     func userEnteredANewCity(name: String) {
         let parameters = ["q": name, "appid": appID]
         fetchWeatherData(url: weatherURL, parameters: parameters)
     }
-
     
     // Prepare For Segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -144,9 +123,4 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Changi
         }
     }
     
-    
-    
-    
 }
-
-
